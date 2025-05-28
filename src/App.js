@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,14 +22,34 @@ const App = () => {
     const { name, value } = e.target;
     setFeedback(prev => ({ ...prev, [name]: value }));
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Feedback submitted:', feedback);
-    setIsSubmitted(true);
-    setFeedback({ name: '', email: '', message: '' });
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
+  const scriptURL = "https://script.google.com/macros/s/AKfycbyJwN7FL8QuQywXoqnuQ_3v9YW-imk1Hzuk0_LnHvU67iNXsKGgomYi6ywztybt_sjXVg/exec";
+
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify(feedback),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (response.ok) {
+      toast.success("Feedback saved to Google Sheet!");
+      setIsSubmitted(true);
+      setFeedback({ name: '', email: '', message: '' });
+      setTimeout(() => setIsSubmitted(false), 3000);
+    } else {
+      toast.error("Failed to submit feedback.");
+    }
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    toast.error("Something went wrong.");
+  }
+};
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,6 +118,8 @@ const App = () => {
           </button>
         </div>
       </header>
+    
+      
 
       {/* Hero Section */}
       <section id="home" className="hero">
@@ -105,7 +129,6 @@ const App = () => {
             <p className="hero-subtitle">Powerful browser extensions to protect your privacy and enhance your browsing experience</p>
             <div className="hero-buttons">
               <a href="#extensions" className="btn-primary">Explore Extensions</a>
-              <a href="#download" className="btn-secondary">Download Now</a>
             </div>
           </div>
           <div className="hero-image">
@@ -348,53 +371,69 @@ const App = () => {
       </section>
 
       {/* Feedback Section */}
-      <section className="feedback">
-        <div className="container">
-          <div className="feedback-content">
-            <h2>Your <span>Feedback</span> Matters</h2>
-            <p>Help us improve by sharing your experience</p>
-            {isSubmitted ? (
-              <div className="success-message">
-                <p>Thank you for your feedback! We appreciate your input.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="feedback-form">
-                <div className="form-group">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={feedback.name}
-                    onChange={handleFeedbackChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    value={feedback.email}
-                    onChange={handleFeedbackChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <textarea
-                    name="message"
-                    placeholder="Your Feedback"
-                    rows="4"
-                    value={feedback.message}
-                    onChange={handleFeedbackChange}
-                    required
-                  ></textarea>
-                </div>
-                <button type="submit" className="btn-primary">Submit Feedback</button>
-              </form>
-            )}
-          </div>
+   <section className="feedback">
+  <div className="container">
+    <div className="feedback-content">
+      <h2>Your <span>Feedback</span> Matters</h2>
+      <p>Help us improve by sharing your experience</p>
+
+      {isSubmitted ? (
+        <div className="success-message">
+          <p>Thank you for your feedback! We appreciate your input.</p>
         </div>
-      </section>
+      ) : (
+        <form onSubmit={handleSubmit} className="feedback-form">
+          <div className="form-group">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              value={feedback.name}
+              onChange={handleFeedbackChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              value={feedback.email}
+              onChange={handleFeedbackChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <textarea
+              name="message"
+              placeholder="Your Feedback"
+              rows="4"
+              value={feedback.message}
+              onChange={handleFeedbackChange}
+              required
+            ></textarea>
+          </div>
+          <button type="submit" className="btn-primary">Submit Feedback</button>
+        </form>
+      )}
+    </div>
+  </div>
+
+  {/* Toast Container */}
+  <ToastContainer
+    position="top-center"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop={false}
+    closeOnClick
+    rtl={false}
+    pauseOnFocusLoss
+    draggable
+    pauseOnHover
+    theme="light"
+  />
+</section>
+
 
       {/* Footer */}
       <footer className="footer">
