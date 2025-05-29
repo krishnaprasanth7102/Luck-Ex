@@ -60,8 +60,8 @@ const handleSubmitChat = (e) => {
   const navbarClass = scrollPosition > 50 ? 'navbar scrolled' : 'navbar';
 
 const extensions = [
-  { name: 'Privacy Guard', desc: 'Block trackers and protect your data', icon: '🔒', zipPath: '/downloads/privacy-guard.zip' },
-  { name: 'Ad Blocker', desc: 'Remove all ads for seamless browsing', icon: '🚫', zipPath: '/downloads/ad-blocker.zip' },
+  { name: 'Bot Guard', desc: 'Summarizes websites before loading', icon: '🔒', zipPath: '/downloads/Bot Guard.zip' },
+  { name: 'Clearify', desc: 'Decodes slang into clear English form', icon: '🚫', zipPath: '/downloads/Clearify.zip' },
   { name: 'Password Vault', desc: 'Secure password storage and generator', icon: '🔑', zipPath: '/downloads/password-vault.zip' },
   { name: 'Dark Mode Pro', desc: 'Universal dark mode for all websites', icon: '🌙', zipPath: '/downloads/dark-mode-pro.zip' }
 ];
