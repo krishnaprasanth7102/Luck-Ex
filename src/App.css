@@ -147,6 +147,14 @@ img {
 }
 
 /* Navbar */
+:root {
+  --transition: all 0.3s ease;
+  --secondary-color: #ffffff;
+  --accent-color: #4a6bff;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Common Navbar Styling */
 .navbar {
   position: fixed;
   top: 0;
@@ -168,6 +176,9 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
 }
 
 .logo {
@@ -195,6 +206,7 @@ img {
   font-weight: 500;
   position: relative;
   transition: var(--transition);
+  text-decoration: none;
 }
 
 .nav-links a:hover {
@@ -216,6 +228,7 @@ img {
   width: 100%;
 }
 
+/* Hamburger Menu */
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -247,6 +260,47 @@ img {
   transform: translateY(-9px) rotate(-45deg);
 }
 
+/* RESPONSIVE STYLES */
+@media screen and (max-width: 1024px) {
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    flex-direction: column;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    text-align: center;
+    padding: 0;
+  }
+
+  .nav-links.active {
+    max-height: 500px;
+    padding: 20px 0;
+  }
+
+  .nav-links a {
+    margin: 15px 0;
+    font-size: 1.2rem;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .logo-icon {
+    font-size: 1.5rem;
+  }
+}
+
 /* Hero Section */
 .hero {
   height: 100vh;
@@ -275,7 +329,8 @@ img {
 }
 
 .hero-title {
-  font-size: 3.75rem;
+  margin-top: 80px;
+  font-size: 2.75rem;
   margin-bottom: 20px;
   line-height: 1.2;
   background: linear-gradient(90deg, #fff, #aaa);
@@ -1009,17 +1064,65 @@ img {
 }
 
 /* Feedback Section */
-
-@media (max-width: 600px) {
-  .container {
-    padding: 0 15px;
-  }
-
-  .feedback-form input,
-  .feedback-form textarea {
-    font-size: 0.9rem;
-  }
+.feedback-chat .chatbox {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: auto;
 }
+
+.chat-messages {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.chat-message {
+  margin: 0.5rem 0;
+  display: flex;
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.chat-message.bot {
+  justify-content: flex-start;
+}
+
+.bubble {
+  background: #f0f0f0;
+  padding: 0.7rem 1rem;
+  border-radius: 20px;
+  max-width: 70%;
+}
+
+.chat-message.user .bubble {
+  background: #aee6d8;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: 1rem;
+}
+
+.chat-input-form input {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.btn-send {
+  background: #2c2c2c;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
 
 /* Footer */
 footer {

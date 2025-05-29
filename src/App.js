@@ -18,37 +18,34 @@ const App = () => {
     setActiveFAQ(activeFAQ === index ? null : index);
   };
 
-  const handleFeedbackChange = (e) => {
-    const { name, value } = e.target;
-    setFeedback(prev => ({ ...prev, [name]: value }));
-  };
-const handleSubmit = async (e) => {
+const [chatMessage, setChatMessage] = useState('');
+const [chatHistory, setChatHistory] = useState([
+  { sender: 'bot', text: 'Hi! Please share your feedback here.' }
+]);
+
+const handleSubmitChat = (e) => {
   e.preventDefault();
 
-  const scriptURL = "https://script.google.com/macros/s/AKfycbyJwN7FL8QuQywXoqnuQ_3v9YW-imk1Hzuk0_LnHvU67iNXsKGgomYi6ywztybt_sjXVg/exec";
+  if (chatMessage.trim() === '') return;
 
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      body: JSON.stringify(feedback),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+  const newMessage = { sender: 'user', text: chatMessage };
 
-    if (response.ok) {
-      toast.success("Feedback saved to Google Sheet!");
-      setIsSubmitted(true);
-      setFeedback({ name: '', email: '', message: '' });
-      setTimeout(() => setIsSubmitted(false), 3000);
-    } else {
-      toast.error("Failed to submit feedback.");
-    }
-  } catch (error) {
-    console.error("Error submitting feedback:", error);
-    toast.error("Something went wrong.");
-  }
+  setChatHistory((prev) => [...prev, newMessage]);
+
+  // Simulate a bot response
+  setTimeout(() => {
+    setChatHistory((prev) => [
+      ...prev,
+      { sender: 'bot', text: 'Thank you for your message!' }
+    ]);
+  }, 500);
+
+  toast.success('Feedback sent!');
+
+  // Clear input
+  setChatMessage('');
 };
+
 
 
   useEffect(() => {
@@ -62,12 +59,13 @@ const handleSubmit = async (e) => {
 
   const navbarClass = scrollPosition > 50 ? 'navbar scrolled' : 'navbar';
 
-  const extensions = [
-    { name: 'Privacy Guard', desc: 'Block trackers and protect your data', icon: '🔒' },
-    { name: 'Ad Blocker', desc: 'Remove all ads for seamless browsing', icon: '🚫' },
-    { name: 'Password Vault', desc: 'Secure password storage and generator', icon: '🔑' },
-    { name: 'Dark Mode Pro', desc: 'Universal dark mode for all websites', icon: '🌙' }
-  ];
+const extensions = [
+  { name: 'Privacy Guard', desc: 'Block trackers and protect your data', icon: '🔒', zipPath: '/downloads/privacy-guard.zip' },
+  { name: 'Ad Blocker', desc: 'Remove all ads for seamless browsing', icon: '🚫', zipPath: '/downloads/ad-blocker.zip' },
+  { name: 'Password Vault', desc: 'Secure password storage and generator', icon: '🔑', zipPath: '/downloads/password-vault.zip' },
+  { name: 'Dark Mode Pro', desc: 'Universal dark mode for all websites', icon: '🌙', zipPath: '/downloads/dark-mode-pro.zip' }
+];
+
 
   const features = [
     { title: 'Lightweight', desc: 'Minimal resource usage for optimal performance', icon: '⚡' },
@@ -76,14 +74,7 @@ const handleSubmit = async (e) => {
     { title: 'Regular Updates', desc: 'Continuous improvements and new features', icon: '🔄' }
   ];
 
-  const team = [
-    { name: 'Ijas', role: 'CEO & Founder', img: 'https://randomuser.me/api/portraits/men/32.jpg' },
-    { name: 'Mahesh', role: 'Lead Developer', img: 'https://randomuser.me/api/portraits/women/44.jpg' },
-    { name: 'Midhun Chen', role: 'Security Expert', img: 'https://randomuser.me/api/portraits/men/22.jpg' },
-    { name: 'Amal Davis', role: 'UX Designer', img: 'https://randomuser.me/api/portraits/women/63.jpg' },
-    { name: 'krishna Kim', role: 'Marketing Head', img: 'https://randomuser.me/api/portraits/men/75.jpg' },
-    { name: 'Sreehari Brown', role: 'Customer Support', img: 'https://randomuser.me/api/portraits/women/28.jpg' }
-  ];
+
 
   const faqs = [
     { question: 'How do I install Lock extensions?', answer: 'Simply visit our download page, choose your browser, and click install. The extension will guide you through the setup process.' },
@@ -95,33 +86,33 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="app">
-      {/* Navbar */}
-      <header className={navbarClass}>
-        <div className="container">
-          <div className="logo">
-            <span className="logo-icon">🔒</span>
-            <span className="logo-text">LOCK</span>
-          </div>
-          <nav className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a>
-            <a href="#about" onClick={() => setIsMenuOpen(false)}>About</a>
-            <a href="#extensions" onClick={() => setIsMenuOpen(false)}>Extensions</a>
-            <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
-            <a href="#team" onClick={() => setIsMenuOpen(false)}>Team</a>
-            <a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a>
-            <a href="#faq" onClick={() => setIsMenuOpen(false)}>FAQ</a>
-          </nav>
-          <button className="menu-toggle" onClick={toggleMenu}>
-            <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
-            <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
-            <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
-          </button>
-        </div>
-      </header>
+  <header className={navbarClass}>
+  <div className="container">
+    <div className="logo">
+      <span className="logo-icon">🔒</span>
+      <span className="logo-text">LOCK</span>
+    </div>
+    <nav className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+      <a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a>
+      <a href="#about" onClick={() => setIsMenuOpen(false)}>About</a>
+      <a href="#extensions" onClick={() => setIsMenuOpen(false)}>Extensions</a>
+      <a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a>
+      <a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a>
+      <a href="#faq" onClick={() => setIsMenuOpen(false)}>FAQ</a>
+    </nav>
+    <button className="menu-toggle" onClick={toggleMenu}>
+      <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
+      <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
+      <span className={`bar ${isMenuOpen ? 'animate' : ''}`}></span>
+    </button>
+  </div>
+</header>
+
     
       
 
       {/* Hero Section */}
+      
       <section id="home" className="hero">
         <div className="container">
           <div className="hero-content">
@@ -172,11 +163,11 @@ const handleSubmit = async (e) => {
               <p>We're not just another tech company - we're a movement dedicated to fighting against data mining, intrusive ads, and online surveillance.</p>
               <div className="stats">
                 <div className="stat-item">
-                  <h4>5M+</h4>
+                  <h4>6+</h4>
                   <p>Active Users</p>
                 </div>
                 <div className="stat-item">
-                  <h4>15+</h4>
+                  <h4>4+</h4>
                   <p>Extensions</p>
                 </div>
                 <div className="stat-item">
@@ -215,7 +206,14 @@ const handleSubmit = async (e) => {
                 <div className="extension-icon">{ext.icon}</div>
                 <h3>{ext.name}</h3>
                 <p>{ext.desc}</p>
-                <button className="btn-outline">Learn More</button>
+                <a
+  href={ext.zipPath}
+  download
+  className="btn-outline"
+>
+  Download
+</a>
+
               </div>
             ))}
           </div>
@@ -269,83 +267,9 @@ const handleSubmit = async (e) => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section id="team" className="team">
-        <div className="container">
-          <div className="section-header">
-            <h2>Our <span>Team</span></h2>
-            <p>The brilliant minds behind Lock</p>
-          </div>
-          <div className="team-grid">
-            {team.map((member, index) => (
-              <div key={index} className="team-card" data-aos="fade-up" data-aos-delay={index * 100}>
-                <div className="team-img">
-                  <img src={member.img} alt={member.name} />
-                  <div className="social-links">
-                    <a href="#"><i className="fab fa-twitter"></i></a>
-                    <a href="#"><i className="fab fa-linkedin"></i></a>
-                    <a href="#"><i className="fab fa-github"></i></a>
-                  </div>
-                </div>
-                <h3>{member.name}</h3>
-                <p>{member.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
+     
       {/* Contact Section */}
-      <section id="contact" className="contact">
-        <div className="container">
-          <div className="section-header">
-            <h2>Contact <span>Us</span></h2>
-            <p>We'd love to hear from you</p>
-          </div>
-          <div className="contact-content">
-            <div className="contact-info">
-              <div className="info-item">
-                <i className="fas fa-map-marker-alt"></i>
-                <div>
-                  <h3>Location</h3>
-                  <p>123 Security Ave, San Francisco, CA 94107</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <i className="fas fa-envelope"></i>
-                <div>
-                  <h3>Email</h3>
-                  <p>support@locksecurity.com</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <i className="fas fa-phone-alt"></i>
-                <div>
-                  <h3>Phone</h3>
-                  <p>+1 (555) 123-4567</p>
-                </div>
-              </div>
-            </div>
-            <div className="contact-form">
-              <form>
-                <div className="form-group">
-                  <input type="text" placeholder="Your Name" required />
-                </div>
-                <div className="form-group">
-                  <input type="email" placeholder="Your Email" required />
-                </div>
-                <div className="form-group">
-                  <input type="text" placeholder="Subject" />
-                </div>
-                <div className="form-group">
-                  <textarea placeholder="Your Message" rows="5" required></textarea>
-                </div>
-                <button type="submit" className="btn-primary">Send Message</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
       {/* FAQ Section */}
       <section id="faq" className="faq">
@@ -370,56 +294,35 @@ const handleSubmit = async (e) => {
         </div>
       </section>
 
-      {/* Feedback Section */}
-   <section className="feedback">
-  <div className="container">
-    <div className="feedback-content">
+     {/* Chat-Style Feedback Section */}
+<section className="feedback-chat">
+  <div className="section-header">
+    <div className="chatbox">
       <h2>Your <span>Feedback</span> Matters</h2>
-      <p>Help us improve by sharing your experience</p>
+      <p>Let us know your thoughts in the chat below</p>
 
-      {isSubmitted ? (
-        <div className="success-message">
-          <p>Thank you for your feedback! We appreciate your input.</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="feedback-form">
-          <div className="form-group">
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              value={feedback.name}
-              onChange={handleFeedbackChange}
-              required
-            />
+      <div className="chat-messages">
+        {chatHistory.map((msg, index) => (
+          <div key={index} className={`chat-message ${msg.sender}`}>
+            <div className="bubble">{msg.text}</div>
           </div>
-          <div className="form-group">
-            <input
-              type="email"
-              name="email"
-              placeholder="Your Email"
-              value={feedback.email}
-              onChange={handleFeedbackChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <textarea
-              name="message"
-              placeholder="Your Feedback"
-              rows="4"
-              value={feedback.message}
-              onChange={handleFeedbackChange}
-              required
-            ></textarea>
-          </div>
-          <button type="submit" className="btn-primary">Submit Feedback</button>
-        </form>
-      )}
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmitChat} className="chat-input-form">
+        <input
+          type="text"
+          name="message"
+          placeholder="Type your feedback..."
+          value={chatMessage}
+          onChange={(e) => setChatMessage(e.target.value)}
+          required
+        />
+        <button type="submit" className="btn-send">Send</button>
+      </form>
     </div>
   </div>
 
-  {/* Toast Container */}
   <ToastContainer
     position="top-center"
     autoClose={3000}
